@@ -1,0 +1,45 @@
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+  
+  <div id="myDiv" style="width: 800px; height: 600px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+  <script>
+  Plotly.d3.csv('https://raw.githubusercontent.com/semihyumusak/HousePricePrediction/master/home_data.csv', function(err, rows){
+  function unpack(rows, key) {
+  return rows.map(function(row) { return row[key]; });
+}
+
+var trace2 = {
+      mode: 'markers',
+      //name: continent,
+      x: unpack(rows, 'sqft_living'),
+      y: unpack(rows, 'price'),
+      //text: unpack(rows, 'country'),
+//      marker: {
+  //       sizemode: 'area',
+          //size: unpack(rows, 'pop'),
+          //sizeref: POP_TO_PX_SIZE
+    //  }
+	  marker: { size: 3 }
+
+  };
+
+var layout = {
+  xaxis: {title: 'Living Area'},
+  yaxis: {title: 'Price'},
+  //margin: {t: 20},
+  //hovermode: 'closest'
+};
+
+
+var data = [ trace2 ];
+
+
+Plotly.newPlot('myDiv', data, layout);
+
+});
+  </script>
+</body>

@@ -1,0 +1,72 @@
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+  
+  <div id="myDiv" style="width: 800px; height: 600px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+  <script>
+  Plotly.d3.csv('https://raw.githubusercontent.com/semihyumusak/HousePricePrediction/master/home_data.csv', function(err, rows){
+  function unpack(rows, key) {
+  return rows.map(function(row) { return row[key]; });
+}
+
+zipcodes = unpack(rows, 'zipcode')
+prices = unpack(rows, 'price')
+unique_zipcodes =[]
+ii = 0
+for (i = 0; i < zipcodes.length; i++) { 
+    if (jQuery.inArray( zipcodes[i], unique_zipcodes )==-1)
+	{
+		unique_zipcodes[ii++] = zipcodes[i] 
+	}
+}
+
+
+var layout = {
+  xaxis: {title: 'Zip Code'},
+  yaxis: {title: 'Price'},
+  //margin: {t: 20},
+  //hovermode: 'closest'
+  boxmode: 'group'
+};
+
+
+var data = [  ];
+
+unique_zipcodes.sort()
+
+for (j = 0; j < unique_zipcodes.length; j++) { 
+	max = -99999999
+	min = 99999999
+	pricelist = []
+	for (i = 0; i < zipcodes.length; i++) { 
+		if (zipcodes[i]== unique_zipcodes[j])
+		{
+			pricelist.push (prices[i])
+			//if (max<prices[i])
+			//{
+			//	max = prices[i]
+			//}
+			//if(min>prices[i])
+			//{
+			//	min = prices[i]
+			//}
+		}
+	}
+	var trace = {
+	  y: pricelist,//[min,max],
+	  x: unique_zipcodes[j],
+	  name: unique_zipcodes[j],
+//	  marker: {color: '#FF4136'},
+	  type: 'box',
+	  boxpoints: false
+	};
+	data.push(trace)
+}
+Plotly.newPlot('myDiv', data,layout);
+});
+  </script>
+</body>
